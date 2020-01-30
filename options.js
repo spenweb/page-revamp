@@ -4,18 +4,32 @@
 
 "use strict";
 
-let page = document.getElementById("buttonDiv");
-const kButtonColors = ["#3aa757", "#e8453c", "#f9bb2d", "#4688f1"];
-function constructOptions(kButtonColors) {
-  for (let item of kButtonColors) {
-    let button = document.createElement("button");
-    button.style.backgroundColor = item;
-    button.addEventListener("click", function() {
-      chrome.storage.sync.set({ color: item }, function() {
-        console.log("color is " + item);
-      });
-    });
-    page.appendChild(button);
-  }
+function constructDomainManager(container, selectedDomains) {
+  let textarea = document.createElement("textarea");
+
+  textarea.addEventListener("change", function(e) {
+    const domains = filterDomains(e.target.value);
+    chrome.storage.sync.set(
+      { [STORAGE_KEYS.selectedDomains]: domains },
+      function() {
+        console.log({ domains });
+      }
+    );
+  });
+
+  textarea.value = selectedDomains.join("\n");
+
+  container.appendChild(textarea);
 }
-constructOptions(kButtonColors);
+
+const filterDomains = uncleanDomains => {
+  let domains = [];
+  const splitted = uncleanDomains.split("\n");
+  domains = splitted;
+  return domains;
+};
+chrome.storage.sync.get([STORAGE_KEYS.selectedDomains], function(data) {
+  const selectedDomains = data.selectedDomains;
+  const domainManagerElm = document.getElementById("domainManagerContainer");
+  constructDomainManager(domainManagerElm, selectedDomains);
+});

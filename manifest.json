@@ -2,10 +2,13 @@
   "name": "Page Revamp",
   "version": "0.1",
   "description": "Control web links' target, add custom CSS, and inject custom JavaScript.",
-  "permissions": ["activeTab", "declarativeContent", "storage"],
+  "permissions": ["activeTab", "tabs", "declarativeContent", "storage"],
   "options_page": "options.html",
   "background": {
-    "scripts": ["background.js"],
+    "scripts": [
+      "constants.js",
+      "background.js"
+    ],
     "persistent": false
   },
   "page_action": {
